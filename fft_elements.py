@@ -74,4 +74,3 @@ def fft_radix2(x: np.ndarray) -> np.ndarray:
 
     # Combine using butterfly operation
     return combine_fft_even_odd(fft_even, fft_odd, N)
-
