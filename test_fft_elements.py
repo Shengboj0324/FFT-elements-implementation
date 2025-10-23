@@ -1,4 +1,3 @@
-"""Test suite for FFT elements implementation."""
 
 import numpy as np
 import pytest

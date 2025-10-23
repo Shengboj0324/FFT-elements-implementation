@@ -1,41 +1,35 @@
 # FFT Elements Implementation
 
-## Files
+## Algorithm Overview
 
-**fft_elements.py** - Core implementation
-- `fft_even_odd(x)`: Splits vector into even/odd indices, computes FFT of each subset
-- `apply_twiddle_factors(x, N, inverse)`: Multiplies vector by W_N^k = e^(-2πik/N)
-- `combine_fft_even_odd(fft_even, fft_odd, N)`: Butterfly operation combining even/odd FFTs
-- `fft_radix2(x)`: Recursive Cooley-Tukey radix-2 FFT (requires power-of-2 length)
+This implementation demonstrates the Cooley-Tukey radix-2 FFT algorithm using a divide-and-conquer approach. The core idea is to recursively decompose the DFT computation into smaller subproblems based on index parity.
 
-**test_fft_elements.py** - Pytest test suite
-- 7 tests validating all functions against numpy.fft
+## Implementation Logic
 
-**run_tests.py** - Standalone test runner (no pytest dependency)
-- 4 core tests covering all functionality
+**Decomposition Strategy**
+- The input vector is split into even-indexed and odd-indexed elements at each recursion level
+- Each subset undergoes independent FFT computation, reducing the problem size by half
+- This decomposition continues recursively until reaching single-element base cases
 
-## Installation
+**Twiddle Factor Application**
+- Complex exponential weights W_N^k = e^(-2πik/N) are applied to the odd-indexed FFT results
+- These phase rotations account for the frequency-domain relationships between interleaved time samples
+- The inverse flag allows conjugate twiddle factors for inverse FFT operations
 
-```bash
-pip install numpy
-```
+**Butterfly Combination**
+- The even and odd FFT results are recombined using the butterfly operation
+- First half: X[k] = E[k] + W_N^k × O[k] for k = 0 to N/2-1
+- Second half: X[k+N/2] = E[k] - W_N^k × O[k] exploiting symmetry
+- This exploits the periodicity of twiddle factors to avoid redundant computation
 
-## Testing
+**Computational Efficiency**
+- The recursive structure achieves O(N log N) complexity instead of O(N²) for naive DFT
+- Each recursion level processes N elements with O(N) operations
+- Total depth is log₂(N) for power-of-2 input lengths
 
-```bash
-python run_tests.py
-```
+## Core Functions
 
-Or with pytest:
-```bash
-pytest test_fft_elements.py -v
-```
-
-## Algorithm
-
-Radix-2 FFT via divide-and-conquer:
-1. Split input into even-indexed and odd-indexed elements
-2. Recursively compute FFT of each half
-3. Combine using butterfly: X[k] = E[k] + W_N^k × O[k], X[k+N/2] = E[k] - W_N^k × O[k]
-
-Where E[k] and O[k] are FFTs of even/odd elements, W_N^k = e^(-2πik/N) is the twiddle factor.
+- `fft_even_odd(x)` - Separates and computes FFT of even/odd indexed subsets
+- `apply_twiddle_factors(x, N, inverse)` - Applies complex exponential phase rotations
+- `combine_fft_even_odd(fft_even, fft_odd, N)` - Executes butterfly recombination
+- `fft_radix2(x)` - Main recursive FFT driver requiring power-of-2 length
