@@ -1,13 +1,6 @@
 
 import numpy as np
 def fft_even_odd(x: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Compute FFT of even and odd indexed elements separately.
-    Args:
-        x: Complex vector input
-    Returns:
-        (FFT of even elements, FFT of odd elements)
-    """
     # Extract even-indexed elements (0, 2, 4, ...)
     even_elements = x[::2]
     # Extract odd-indexed elements (1, 3, 5, ...)
@@ -19,15 +12,6 @@ def fft_even_odd(x: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return fft_even, fft_odd
 
 def apply_twiddle_factors(x: np.ndarray, N: int, inverse: bool = False) -> np.ndarray:
-    """
-    Apply twiddle factors W_N^k = e^(-2πik/N) to complex vector.
-    Args:
-        x: Complex vector input
-        N: FFT size (total number of points)
-        inverse: If True, use positive exponent
-    Returns:
-        Vector with twiddle factors applied element-wise
-    """
     k = len(x)
     # Create index array [0, 1, 2, ..., k-1]
     indices = np.arange(k)
@@ -41,15 +25,6 @@ def apply_twiddle_factors(x: np.ndarray, N: int, inverse: bool = False) -> np.nd
     return x * twiddle_factors
 
 def combine_fft_even_odd(fft_even: np.ndarray, fft_odd: np.ndarray, N: int) -> np.ndarray:
-    """
-    Butterfly operation: combine even/odd FFT results using twiddle factors.
-    Args:
-        fft_even: FFT of even indexed elements
-        fft_odd: FFT of odd indexed elements
-        N: Total FFT size
-    Returns:
-        Combined FFT result: X[k] = E[k] + W_N^k*O[k], X[k+N/2] = E[k] - W_N^k*O[k]
-    """
     # Apply twiddle factors to odd FFT: W_N^k * O[k]
     twiddle_odd = apply_twiddle_factors(fft_odd, N, inverse=False)
     # Allocate result array
@@ -62,15 +37,6 @@ def combine_fft_even_odd(fft_even: np.ndarray, fft_odd: np.ndarray, N: int) -> n
     return result
 
 def fft_radix2(x: np.ndarray) -> np.ndarray:
-    """
-    Recursive radix-2 FFT using Cooley-Tukey algorithm.
-    Args:
-        x: Complex vector (length must be power of 2)
-    Returns:
-        FFT of input vector
-    Raises:
-        ValueError: If input length is not power of 2
-    """
     N = len(x)
     # Check if N is power of 2 using bitwise AND
     if N & (N - 1) != 0:

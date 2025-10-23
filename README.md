@@ -1,9 +1,3 @@
-# FFT Elements Implementation
-
-## Algorithm Overview
-
-This implementation demonstrates the Cooley-Tukey radix-2 FFT algorithm using a divide-and-conquer approach. The core idea is to recursively decompose the DFT computation into smaller subproblems based on index parity.
-
 ## Implementation Logic
 
 **Decomposition Strategy**
@@ -27,7 +21,7 @@ This implementation demonstrates the Cooley-Tukey radix-2 FFT algorithm using a 
 - Each recursion level processes N elements with O(N) operations
 - Total depth is log₂(N) for power-of-2 input lengths
 
-## Core Functions
+## Functions
 
 - `fft_even_odd(x)` - Separates and computes FFT of even/odd indexed subsets
 - `apply_twiddle_factors(x, N, inverse)` - Applies complex exponential phase rotations
